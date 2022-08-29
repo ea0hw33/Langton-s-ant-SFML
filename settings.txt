@@ -1,0 +1,20 @@
+{
+    "fps":"1000",
+    "slowdown":"0",
+    "walls":"true",
+    "sizeOfSquare":"1",
+    "windowResolution":["1000","1000"],
+    "boost":"10000",
+    "sound":"True",
+    "ant":[
+        {
+        "name":"....er",
+        "amount":"0",
+        "x":"centre",
+        "y":"centre",
+        "color":["255","255","0"],
+        "rools":"LLLLRRRRRRRLL",
+        "mod":"2",
+        "rotation":"0"},
+    ]
+}
