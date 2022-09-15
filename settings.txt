@@ -1,4 +1,4 @@
-{
+ {
     "fps":"60",
     "slowdown":"0",
     "walls":"True",
