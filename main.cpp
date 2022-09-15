@@ -1,72 +1,66 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include <vector>
 #include <iostream>
 #include <stdio.h>
-#include "InputAndOutput.hpp"
+#include "Input.hpp"
 
 int main() {
-    readFromFile(settings,antss);
-    int sizeOfAntss=antss.size();
-    for(int i = 0; i<sizeOfAntss;++i)
-        for(int j = 0;j<antss[i].amount;++j)
-            antss.push_back(antss[i]);  
-    for(int i=0; i<antss.size();++i)
-        antss[i].colorGradation=generatGradationOfColor(antss[i].color,antss[i].rools);
+    readFromFile(settings,ants);
+    int sizeOfAnts=ants.size();
+    for(int i = 0; i<sizeOfAnts;++i)
+        for(int j = 0;j<ants[i].amount-1;++j)
+            ants.push_back(ants[i]);  
+    for(int i=0; i<ants.size();++i)
+        ants[i].colorGradation=generatGradationOfColor(ants[i].color,ants[i].rules);
 
-    indexOfColors(antss);
-    
-    int size=settings.sizeOfSquare;
+    indexOfColors(ants);
+
+    int size=settings.sizeOfPixele;
     int width=settings.windowResolution[0];
     int height=settings.windowResolution[1];
 
     std::vector<std::vector<int>> matrix; 
-    matrix.resize(height/size);
-    for (int i = 0; i < height/size; i++) 
-        matrix[i].resize(width/size,0);
+    matrix.resize(width/size);
+    for (int i = 0; i < width/size; i++) 
+        matrix[i].resize(height/size,0);
 
-    sf::Music music;
     sf::RenderWindow window(sf::VideoMode(width, height), "Langton ant");
-    sf::RectangleShape squar(sf::Vector2f(size,size));
+    sf::RectangleShape pixel(sf::Vector2f(size,size));
     sf::RectangleShape ant(sf::Vector2f(size,size));
     ant.setFillColor(sf::Color::Red);
-    squar.setFillColor(sf::Color::Green);
 
-    while (window.isOpen()) {
-        for(int boost=0; boost<settings.boost; ++boost)
-            for(int id=0; id<antss.size();++id) 
-                antss[id].CalculatePosition(matrix,settings,antss);
+    if(!error)
+        while (window.isOpen()) {
+            for(int boost=0; boost<settings.boost; ++boost)
+                for(int id=0; id<ants.size();++id) 
+                    ants[id].CalculatePosition(matrix,settings,ants);
 
-        window.setFramerateLimit(settings.fps);
-        sf::sleep(sf::milliseconds(settings.slowdown));
-        sf::Event event;
-        
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+            window.setFramerateLimit(settings.fps);
+            sf::sleep(sf::milliseconds(settings.slowdown));
+            sf::Event event;
+            
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+            }
 
-       for (int x = 0; x < height/size; x++)
-            for(int y = 0; y < width/size; y++) {
-                if(matrix[x][y]!=0) {
-                    squar.setPosition(x*size,y*size);
-                    std::vector<int> color=FindColor(antss,matrix[x][y]);
-                    squar.setFillColor(sf::Color(color[0],color[1],color[2]));
-                    window.draw(squar);
+        for (int x = 0; x < width/size; x++)
+                for(int y = 0; y < height/size; y++) {
+                    if(matrix[x][y]!=0) {
+                        pixel.setPosition(x*size,y*size);
+                        std::vector<int> color=FindColor(ants,matrix[x][y]);
+                        pixel.setFillColor(sf::Color(color[0],color[1],color[2]));
+                        window.draw(pixel);
+                    }
                 }
+            
+            for(int id=0;id<ants.size();++id) {
+                ant.setPosition(ants[id].x*size,ants[id].y*size);
+                window.draw(ant);
             }
-        
-        for(int id=0;id<antss.size();++id) {
-            ant.setPosition(antss[id].x*size,antss[id].y*size);
-            window.draw(ant);
-            if(settings.sound){
-                music.openFromFile(FindSound(antss[id].rotation)); music.play();
-                while(music.getStatus()) continue;
-            }
-        }
 
-        window.display();
-        window.clear();
-    }
+            window.display();
+            window.clear();
+        }
     return 0;
 }

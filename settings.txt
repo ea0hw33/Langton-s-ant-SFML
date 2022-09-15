@@ -1,20 +1,22 @@
 {
-    "fps":"1000",
+    "fps":"60",
     "slowdown":"0",
-    "walls":"true",
-    "sizeOfSquare":"1",
-    "windowResolution":["1000","1000"],
-    "boost":"10000",
-    "sound":"True",
+    "walls":"True",
+    "sizeOfPixele":"10",
+    "windowResolution":["1900","1000"],
+    "boost":"10",
     "ant":[
         {
+        "amount":"1",
         "name":"....er",
-        "amount":"0",
-        "x":"centre",
-        "y":"centre",
+        "x":"center",
+        "y":"center",
         "color":["255","255","0"],
-        "rools":"LLLLRRRRRRRLL",
-        "mod":"2",
+        "rules":"LR",
         "rotation":"0"},
+        {
+        "amount":"4",
+        "mod":"1",
+        }
     ]
 }

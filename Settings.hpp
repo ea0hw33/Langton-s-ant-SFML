@@ -1,22 +1,26 @@
-#include <bits/stdc++.h>
+#include <vector>
+#include <iostream>
+#include <string>
+#include "ErrorOutput.hpp"
 
 int numFromString(std::string num);
 
 struct Settings {
-    int fps=120;//значение по умолчанию
-    int slowdown=0;//значние по умолчанию
+    //default values
+    int fps=120;
+    int slowdown=0;
     bool sound=false;
-    bool walls=0;//занчение по умолчанию
-    int sizeOfSquare=10;//значение по умолчанию
-    std::vector<int> windowResolution={1000,1000};//размер экрана 1000x1000 по умолчанию
+    bool walls=0;
+    int sizeOfPixele=10;
+    std::vector<int> windowResolution={1000,1000};//screen size 1000x1000 by default
     int boost=1;
 
-    int cases(std::string s) {
-        std::vector<std::string> base={"fps","slowdown","walls","sizeOfSquare","windowResolution","boost","sound"};
+    int cases(std::string key) {
+        std::vector<std::string> base={"fps","slowdown","walls","sizeOfPixele","windowResolution","boost"};
         for(int i=0;i<base.size();++i){
-            if(s==base[i]) return i;
+            if(key==base[i]) return i;
         }
-        std::cout<<"ошибка имен структуры Settings: "<<s<<" - параметры будут по умолчанию\n";
+        ErrorMsgOfStruct("Settings",key);
     }
 
     void Input(std::string key,std::vector<std::string> dev) {
@@ -35,7 +39,7 @@ struct Settings {
             }
                 break;
             case 3:
-                sizeOfSquare=numFromString(dev[0]);
+                sizeOfPixele=numFromString(dev[0]);
                 break;
             case 4: {
                 windowResolution[0]=numFromString(dev[0]);
@@ -44,9 +48,6 @@ struct Settings {
                 break;
             case 5: 
                 if(numFromString(dev[0])>1) boost=numFromString(dev[0]);
-                break;
-            case 6:
-                if(dev[0]=="True" or dev[0]=="true" or dev[0]=="1") sound=true;
                 break;
             default:
                 break;

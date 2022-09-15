@@ -1,8 +1,10 @@
-#include <bits/stdc++.h>
+#include <vector>
+#include <string>
 #include "Mods.hpp"
-#include "sound.hpp"
+#include "ErrorOutput.hpp"
 
 struct Ant {
+    //default values
     int x;
     int y;
     int mod=0;
@@ -11,7 +13,7 @@ struct Ant {
     int lastIndexOfColor;
     int firstIndexOfColor;
     std::string name;
-    std::string rools="LR";//значения по умлочанию
+    std::string rules="LR";
     std::vector<int> color{255,255,255};
     std::vector<std::vector<int>> colorGradation;
 
@@ -20,31 +22,33 @@ struct Ant {
             if(index <= ants[i].lastIndexOfColor) 
                 return i;
         }
-        std::cout<<"муравей не найден\n";
+
+        ErrorMsg("ant not found.");
     } 
 
-    int cases(std::string s) {
-        std::vector<std::string> base = {"name","x","y","color","mod","rools","rotation","amount"};
+    int cases(std::string key) {
+        std::vector<std::string> base = {"name","x","y","color","mod","rules","rotation","amount"};
         for(int i = 0;i < base.size(); ++i) {
-            if(s==base[i]) return i;
+            if(key==base[i]) return i;
         }
-        std::cout<<"ошибка имен структуры Ant: "<<s<<" - параметр(ы) будет(ут) по умолчанию\n";
+        ErrorMsgOfStruct("Ant",key);
     }
 
     void Input(std::string key, std::vector<std::string> dev) {
-        int cass=cases(key);
+        int cass=-1;
+        cass=cases(key);
         switch (cass)
         {
             case 0:
                 name=dev[0];
                 break;
             case 1: {
-                if(!(dev[0]=="centre" or dev[0]=="Centre")) 
+                if(!(dev[0]=="center" or dev[0]=="Center")) 
                 x=numFromString(dev[0]);
             }
                 break;
             case 2: {
-                if(!(dev[0]=="centre" or dev[0]=="Centre")) 
+                if(!(dev[0]=="center" or dev[0]=="Center")) 
                 y=numFromString(dev[0]);
             }
                 break;
@@ -56,11 +60,11 @@ struct Ant {
                 break;
             case 4: {
                 mod=numFromString(dev[0]);
-                rools=Mods(mod);
+                rules=Mods(mod);
             }
                 break;
             case 5:
-                rools=dev[0];
+                rules=dev[0];
                 break;
             case 6:
                 rotation=numFromString(dev[0]);
@@ -74,7 +78,7 @@ struct Ant {
     }
 
     void Rotation(int index){
-        char C=rools[index];
+        char C=rules[index];
         if(C=='L'){
             --rotation;
         }
@@ -87,12 +91,12 @@ struct Ant {
         int index;
         index=FindAnt(ants,matrix[x][y]);
         index=matrix[x][y]-ants[index].firstIndexOfColor+1;
-        if(index>=rools.size()) {matrix[x][y]=0; index=0;}
+        if(index>=rules.size()) {matrix[x][y]=0; index=0;}
         Rotation(index);
         matrix[x][y]=firstIndexOfColor+index;
         if(rotation==-1) rotation=3;
         else if(rotation==4) rotation=0;
-        if(x<setting.windowResolution[1]/setting.sizeOfSquare-1 and x>0 and y<(setting.windowResolution[0]/setting.sizeOfSquare-1) and y>0)
+        if(x<setting.windowResolution[0]/setting.sizeOfPixele-1 and x>0 and y<(setting.windowResolution[1]/setting.sizeOfPixele-1) and y>0)
             switch (rotation)
             {
                 case 0: --x;
@@ -107,46 +111,45 @@ struct Ant {
                     break;
             }
         if (setting.walls){
-            if(x==setting.windowResolution[1]/setting.sizeOfSquare-1){++rotation; --x;}
+            if(x==setting.windowResolution[0]/setting.sizeOfPixele-1){++rotation; --x;}
             if(x==0){++rotation;++x;}
-            if(y==setting.windowResolution[1]/setting.sizeOfSquare-1){++rotation; --y;}
+            if(y==setting.windowResolution[1]/setting.sizeOfPixele-1){++rotation; --y;}
             if(y==0){++rotation;++y;}
         }
     }
 
 };
 
-// Settings settings;
-std::vector<Ant> antss; 
-void makeAnts(std::vector<Ant>&data,int amount) {
+std::vector<Ant> ants; 
+void makeAnts(std::vector<Ant>&data) {
     Ant a;
-    a.x = settings.windowResolution[1]/(settings.sizeOfSquare*2);
-    a.y = settings.windowResolution[0]/(settings.sizeOfSquare*2);
-    for(int i = 0;i<amount;++i) 
+    a.x = settings.windowResolution[0]/(settings.sizeOfPixele*2);
+    a.y = settings.windowResolution[1]/(settings.sizeOfPixele*2);
         data.push_back(a);
 }
-void indexOfColors(std::vector<Ant>&ants){
+
+void indexOfColors(std::vector<Ant>&ants) {
     int index=0;
     for(int i=0;i<ants.size();++i){
         ++index;
         ants[i].firstIndexOfColor=index;
-        index+=ants[i].rools.size()-1;
+        index+=ants[i].rules.size()-1;
         ants[i].lastIndexOfColor=index;
     }
 }
 
-std::vector<int> FindColor(std::vector<Ant>&ants, int index){
+std::vector<int> FindColor(std::vector<Ant>&ants, int index) {
     std::vector<std::vector<int>> color;
     for(int i=0; i<ants.size();++i) {
         if(index<=ants[i].lastIndexOfColor) 
             return ants[i].colorGradation[index-ants[i].firstIndexOfColor];
     }
-    std::cout<<"цвет не найден\n";
+    ErrorMsg("color not found.");
 }
 
-std::vector<std::vector<int>> generatGradationOfColor(std::vector<int> color, std::string rool){
+std::vector<std::vector<int>> generatGradationOfColor(std::vector<int> color, std::string rool) {
     std::vector<std::vector<int>> colors;
-    for(int i=0; i<rool.size();++i){
+    for(int i=0; i<rool.size();++i) {
         for(int j=0; j<3;++j) if(color[j]>25) color[j]-=25;
         colors.push_back(color);
     }

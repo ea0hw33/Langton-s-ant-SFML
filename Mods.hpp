@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <string>
+
 std::string Mods(int cases) {
 
     switch (cases) {
