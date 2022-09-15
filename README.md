@@ -14,7 +14,7 @@ The project is built on the [SFML](https://www.sfml-dev.org/index.php) C++ graph
 
 ### Installing
 
-download [SFML library](https://www.sfml-dev.org/download/sfml/2.5.1/)
+download [SFML library](https://www.sfml-dev.org/download/sfml/2.5.1/) or you can use the already installed library in the project
 
 ## Running the project
 
